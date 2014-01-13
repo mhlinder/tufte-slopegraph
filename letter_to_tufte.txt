@@ -1,0 +1,20 @@
+Dear Dr. Tufte,
+
+I was inspired by your post and challenge regarding slope graphs, and while I know your challenge has been completed, I have a few thoughts and I am interested in your perspective.
+
+Specifically, I have recently been very concerned with the media used for presenting scientific information, and the resources available for scientists in standardizing these media. It seems as though a shift has occurred in the presentation of science, away from print media towards digital media; though LaTeX and typeset scientific results remain an important component of scientific production.
+
+There seems to be some heterogeneity in the technologies used in generating slope graphs, and I'm curious about this. A practical consideration is the intended medium of a chart's presentation, and I fear many of the submissions for your challenge are lacking in this department.
+
+It is important for chart-generating tools such as you solicited be available in the final format it will be presented in, and for scientists, I envision this as digital (websites) and print (LaTeX). The first possible standardized solution is to merely use a graphical format such as PNG or GIF, which is portable across horizons; I think it is telling that in your initial post, you posted the graphic as a GIF!
+
+On top of this, though, I think it is important that there be implementations in a native language---and that we limit the number of languages in use, so that as practicing visualizers, there is no "paradox of choice" with too many options to choose from, for a basic product.
+
+All of this is to say that a collaborator and I have implemented slopegraphs in three formats, and we believe that from the perspective of a publishing scientist, this is an important innovation: we implement slope graphs in PNG format, using Python and its package matplotlib; we implement a LaTeX version, for journal publication; and we include a web-based D3.js implementation.
+
+We believe the medium is as important as the message, and that these three formats---PNG, typeset PDF, and HTML-based---are the three most relevant to practicing scientists. They allow for portability on the one hand, and native implementation on the other, such that they can be used in a variety of settings.
+
+What are your thoughts on the recent glut of visualization software? Do you think it is time to start standardizing?
+
+Best,
+M. Henry Linder
