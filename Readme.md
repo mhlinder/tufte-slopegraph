@@ -1,7 +1,7 @@
 Tufte Slopegraphs
 =================
 
-A D3.js, LaTeX take on [this Edward Tufte challenge]{http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003nk}
+A D3.js, LaTeX take on [this Edward Tufte challenge](http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003nk)
 
 `slopegraph.py` will generate a D3.js document and a LaTeX file containing slope graphs of input data, with a specified title.
 
