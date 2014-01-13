@@ -8,10 +8,11 @@ def json_csv(filename):
     head = lines[0].rstrip().split(',')
     rows = [l.rstrip().split(',') for l in lines[1:]]
 
-    json = []
+    json = {}
     for row in rows:
-        row = [row[0], float(row[1]), float(row[2])]
-        json.append(dict(zip(head,row)))
+        country = row[0]
+        row = [float(row[1]), float(row[2])]
+        json[country] = dict(zip(head[1:],row))
     return json
 
 filename = "gnp.csv"
