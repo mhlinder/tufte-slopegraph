@@ -10,6 +10,7 @@ Use
 User specifies two items in `slopegraph.py`: `filename` and `title`.
 
 File specifies a source data file, which is comma separated with three columns:
+
 1. `label`: Item label
 2. `col1`: Column 1, titled "col1"
 3. `col2`: Column 2, title "col2"
