@@ -11,19 +11,36 @@
         <h1>Current Receipts of Government as a Percentage of Gross Domestic Product, 1970 and 1979</h1>
         <script type="text/javascript">
             var svg = d3.select("body").append("svg")
-                .attr("width",600)
-                .attr("height",800);
+                .attr("class", "slopegraph")
+                .attr("width", 800)
+                .attr("height", 800);
 
-            var slopedata = {
-                "left": {
-                    "title": "1970",
-                    "data": [
-                        ]}
-                    ],
-                "right": {
-                    "title": "1979",
-                    "data": [
-                        ]} };
+            var slopedata = [
+                {"label": "Sweden", "1970": 46.9, "1979": 57.4},
+                {"label": "Netherlands", "1970": 44, "1979": 55.8},
+                {"label": "Norway", "1970": 43.5, "1979": 52.2},
+                {"label": "Britain", "1970": 40.7, "1979": 39},
+                {"label": "France", "1970": 39, "1979": 43.4},
+                {"label": "Germany", "1970": 37.5, "1979": 42.9},
+                {"label": "Belgium", "1970": 35.2, "1979": 43.2},
+                {"label": "Canada", "1970": 35.2, "1979": 35.8},
+                {"label": "Finland", "1970": 34.9, "1979": 38.2},
+                {"label": "Italy", "1970": 30.4, "1979": 35.7},
+                {"lavel": "United States", "1970": 30.3, "1979": 32.5},
+                {"label": "Greece", "1970": 26.8, "1979": 30.6},
+                {"label": "Switzerland", "1970": 26.5, "1979": 33.2},
+                {"label": "Spain", "1970": 22.5, "1979": 27.1},
+                {"label": "Japan", "1970": 20.7, "1979": 26.6}];
+
+            //var lscale = d3.scale.linear()
+            //    .domain([20.7, 46.9]) // these are min, max for left column
+            //    .range([
+            var left = svg.selectAll("text")
+                .data(slopedata)
+                .enter()
+                .append("text")
+                .attr("x",200)
+                .text(function (d) {return d.label;});
         </script>
     </div> <!-- .content -->
     </body>
