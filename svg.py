@@ -17,13 +17,14 @@ h = height - 2*padding
 
 line_width = 200
 
+fontsize = 12
 # styling for svg
 css = """
     text {
         font-family: "Georgia", Georgia, serif;
-        font-size: 12px;
+        font-size: %ipx;
     }
-    """
+    """ % fontsize
 
 # create svg
 dwg = Drawing("test.svg", size=(width,height))
@@ -48,6 +49,22 @@ vmax = max(cols.values)
 def scale(val, src=(vmin, vmax), dst=(0, h)):
     return ((float(val) - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
 
+def vertplace(j, col):
+    val = col.iloc[j]
+    if j > 0:
+        prev = col.iloc[j-1]
+        prevy = vertplace(j-1, col)
+        curry = scale(val)
+
+        diff = abs(curry-prevy)
+        if diff < fontsize:
+            return prevy - 12;
+        else:
+            return curry
+    else:
+        return scale(val)
+
+ys = {label: [] for label in labels}
 for i in range(ncols):
     col = cols.iloc[:,i]
     
@@ -56,17 +73,18 @@ for i in range(ncols):
     collabels = labels[sort]
 
     for j in range(len(col)):
-        val = col[j]
-        y = scale(val)
+        val = col.iloc[j]
+        y = vertplace(j, col)
         if i==0:
             txt = g.add(dwg.text(collabels.iloc[j]+tabpad+str(val), insert=(collocs[i], h - y), text_anchor="end"))
         elif i==ncols-1:
             txt = g.add(dwg.text(str(val)+tabpad+collabels.iloc[j], insert=(collocs[i], h - y)))
-        # TODO: Multiple columns
-        # else:
-            # txt = g.add(dwg.text(str(val), insert=(collocs[i], h - y)))
+        else:
+            txt = g.add(dwg.text(str(val), insert=(collocs[i], h - y)))
+
+        ys[collabels.iloc[j]].append(y)
 
         if i > 0:
-            line = g.add(dwg.line( (collocs[i-1]+textpad, h - scale(cols.iloc[sort,i-1][j])), (collocs[i]-textpad, h - y), stroke_width=1, stroke='black'))
+            line = g.add(dwg.line( (collocs[i-1]+textpad, h - ys[collabels.iloc[j]][i-1]), (collocs[i]-textpad, h - ys[collabels.iloc[j]][i]), stroke_width=1, stroke='black'))
     
 dwg.save()
