@@ -12,21 +12,21 @@ padding = 20
 textpad = 10
 tabpad = " "
 
+fontsize = 12
+titlefont = 16
+
 w = width - 2*padding
-h = height - 2*padding
+h = height - 2*padding - titlefont - fontsize
 
 line_width = 200
 
-fontsize = 12
-titlefont = 16
 
 # styling for svg
 css = """
     text {
         font-family: "Georgia", Georgia, serif;
-        font-size: %ipx;
     }
-    """ % fontsize
+    """
 
 # create svg
 dwg = Drawing("test.svg", size=(width,height))
@@ -52,7 +52,7 @@ for i in range(ncols):
     elif i==ncols-1:
         title.add(dwg.text(cols.columns[i], insert=(collocs[i],0), font_size='%ipx' % titlefont))
 
-g = g.add(dwg.g())
+g = g.add(dwg.g(transform="translate(0,%i)" % (titlefont+fontsize)))
 # loop over and add labels
 vmin = min(cols.values)
 vmax = max(cols.values)
@@ -87,11 +87,11 @@ for i in range(ncols):
         val = col.iloc[j]
         y = vertplace(j, col)
         if i==0:
-            txt = g.add(dwg.text(collabels.iloc[j]+tabpad+str(val), insert=(collocs[i], h - y), text_anchor='end'))
+            txt = g.add(dwg.text(collabels.iloc[j]+tabpad+str(val), insert=(collocs[i], h - y), text_anchor='end', font_size="%ipx" % fontsize))
         elif i==ncols-1:
-            txt = g.add(dwg.text(str(val)+tabpad+collabels.iloc[j], insert=(collocs[i], h - y)))
+            txt = g.add(dwg.text(str(val)+tabpad+collabels.iloc[j], insert=(collocs[i], h - y), font_size="%ipx" % fontsize))
         else:
-            txt = g.add(dwg.text(str(val), insert=(collocs[i], h - y)))
+            txt = g.add(dwg.text(str(val), insert=(collocs[i], h - y), font_size="%ipx" % fontsize))
 
         ys[collabels.iloc[j]].append(y)
 
