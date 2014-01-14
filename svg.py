@@ -1,6 +1,6 @@
 from svgwrite import Drawing
 from pandas import read_csv
-from numpy import min, max, arange
+from numpy import min, max, arange, argsort
 
 # parameters
 indata = 'gnp.csv'
@@ -48,18 +48,25 @@ vmax = max(cols.values)
 def scale(val, src=(vmin, vmax), dst=(0, h)):
     return ((float(val) - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
 
-for i in range(len(cols)):
-    row = cols.iloc[i,:]
-    for j in range(ncols):
-        y = scale(row[j])
-        if j==0:
-            txt = g.add(dwg.text(labels[i]+tabpad+str(row[j]), insert=(collocs[j], h - y), text_anchor="end"))
-        elif j==ncols-1:
-            txt = g.add(dwg.text(str(row[j])+tabpad+labels[i], insert=(collocs[j], h - y)))
-        else:
-            txt = g.add(dwg.text(str(row[j]), insert=(collocs[j], h - y)))
+for i in range(ncols):
+    col = cols.iloc[:,i]
+    
+    sort = argsort(col)[::-1] # descending---top to bottom
+    col = col[sort]
+    collabels = labels[sort]
 
-        if j > 0:
-            line = g.add(dwg.line( (collocs[j]-textpad, h - y), (collocs[j-1]+textpad, h - scale(row[j-1])), stroke_width=1, stroke='black'))
+    for j in range(len(col)):
+        val = col[j]
+        y = scale(val)
+        if i==0:
+            txt = g.add(dwg.text(collabels.iloc[j]+tabpad+str(val), insert=(collocs[i], h - y), text_anchor="end"))
+        elif i==ncols-1:
+            txt = g.add(dwg.text(str(val)+tabpad+collabels.iloc[j], insert=(collocs[i], h - y)))
+        # TODO: Multiple columns
+        # else:
+            # txt = g.add(dwg.text(str(val), insert=(collocs[i], h - y)))
+
+        if i > 0:
+            line = g.add(dwg.line( (collocs[i-1]+textpad, h - scale(cols.iloc[sort,i-1][j])), (collocs[i]-textpad, h - y), stroke_width=1, stroke='black'))
     
 dwg.save()
