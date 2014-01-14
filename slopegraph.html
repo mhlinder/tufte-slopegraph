@@ -10,37 +10,68 @@
         <div class="content">
         <h1>Current Receipts of Government as a Percentage of Gross Domestic Product, 1970 and 1979</h1>
         <script type="text/javascript">
+            var pt = 12; // font-size; set also in style.css
+            var margin = {top: 20, right: 20, bottom: 20, left: 20};
+            var w = 600 - margin.left - margin.right;
+            var h = 600 - margin.top - margin.bottom;
             var svg = d3.select("body").append("svg")
                 .attr("class", "slopegraph")
-                .attr("width", 800)
-                .attr("height", 800);
+                .attr("width", w + margin.left + margin.right)
+                .attr("height", h + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             var slopedata = [
-                {"label": "Sweden", "1970": 46.9, "1979": 57.4},
-                {"label": "Netherlands", "1970": 44, "1979": 55.8},
-                {"label": "Norway", "1970": 43.5, "1979": 52.2},
-                {"label": "Britain", "1970": 40.7, "1979": 39},
-                {"label": "France", "1970": 39, "1979": 43.4},
-                {"label": "Germany", "1970": 37.5, "1979": 42.9},
-                {"label": "Belgium", "1970": 35.2, "1979": 43.2},
-                {"label": "Canada", "1970": 35.2, "1979": 35.8},
-                {"label": "Finland", "1970": 34.9, "1979": 38.2},
-                {"label": "Italy", "1970": 30.4, "1979": 35.7},
-                {"lavel": "United States", "1970": 30.3, "1979": 32.5},
-                {"label": "Greece", "1970": 26.8, "1979": 30.6},
-                {"label": "Switzerland", "1970": 26.5, "1979": 33.2},
-                {"label": "Spain", "1970": 22.5, "1979": 27.1},
-                {"label": "Japan", "1970": 20.7, "1979": 26.6}];
+                {"label": "Sweden", "1970": "46.9", "1979": "57.4"},
+                {"label": "Netherlands", "1970": "44.0", "1979": "55.8"},
+                {"label": "Norway", "1970": "43.5", "1979": "52.2"},
+                {"label": "Britain", "1970": "40.7", "1979": "39.0"},
+                {"label": "France", "1970": "39.0", "1979": "43.4"},
+                {"label": "Germany", "1970": "37.5", "1979": "42.9"},
+                {"label": "Belgium", "1970": "35.2", "1979": "43.2"},
+                {"label": "Canada", "1970": "35.2", "1979": "35.8"},
+                {"label": "Finland", "1970": "34.9", "1979": "38.2"},
+                {"label": "Italy", "1970": "30.4", "1979": "35.7"},
+                {"label": "United States", "1970": "30.3", "1979": "32.5"},
+                {"label": "Greece", "1970": "26.8", "1979": "30.6"},
+                {"label": "Switzerland", "1970": "26.5", "1979": "33.2"},
+                {"label": "Spain", "1970": "22.5", "1979": "27.1"},
+                {"label": "Japan", "1970": "20.7", "1979": "26.6"}];
 
-            //var lscale = d3.scale.linear()
-            //    .domain([20.7, 46.9]) // these are min, max for left column
-            //    .range([
-            var left = svg.selectAll("text")
+            var scale = d3.scale.linear()
+                .domain([20.7, 57.4]) // these are min, max for both columns
+                .range([0, h]);
+
+            var tabpad = "\t\t\t\t";
+            var texts = svg.selectAll("text")
+                .data(slopedata)
+                .enter();
+            texts.append("text")
+                .attr("x", 200)
+                .attr("y", function(d, i) { return h - scale(d["1970"]);})
+                .text(function (d) {return d.label + tabpad + d["1970"];})
+                .attr("xml:space", "preserve")
+                .attr("style", "text-anchor: end");
+            texts.append("text")
+                .attr("x", 400)
+                .attr("y", function(d) {return h - scale(d["1979"]);})
+                .text(function (d) {return d["1979"] + tabpad + d.label;})
+                .attr("xml:space", "preserve");
+
+            var space = 10; // spacing between text and line
+            var lines = svg.selectAll("line")
                 .data(slopedata)
                 .enter()
-                .append("text")
-                .attr("x",200)
-                .text(function (d) {return d.label;});
+            lines.append("line")
+                .attr("x1", 200 + space)
+                .attr("y1", function(d) {return h - scale(d["1970"]);})
+                .attr("x2", 400 - space)
+                .attr("y2", function(d) {return h - scale(d["1979"]);})
+                .attr("stroke-width", 1)
+                .attr("stroke", "black");
+
+                
+
         </script>
     </div> <!-- .content -->
     </body>
