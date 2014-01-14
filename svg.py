@@ -22,11 +22,7 @@ line_width = 200
 
 
 # styling for svg
-css = """
-    text {
-        font-family: "Georgia", Georgia, serif;
-    }
-    """
+css = 'text { font-family: "Georgia", Georgia, serif; }'
 
 # create svg
 dwg = Drawing("test.svg", size=(width,height))
