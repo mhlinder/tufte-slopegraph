@@ -18,6 +18,8 @@ h = height - 2*padding
 line_width = 200
 
 fontsize = 12
+titlefont = 16
+
 # styling for svg
 css = """
     text {
@@ -29,8 +31,6 @@ css = """
 # create svg
 dwg = Drawing("test.svg", size=(width,height))
 dwg.defs.add(dwg.style(css))
-# pad
-g = dwg.add(dwg.g(transform="translate(%i,%i)" % (padding,padding)))
 
 data = read_csv(indata)
 labels = data.iloc[:,0]
@@ -42,6 +42,17 @@ colspace = h - nlines*200
 colwidth = colspace / float(ncols)
 collocs = (arange(ncols) + 1)*colwidth
 
+# pad
+g = dwg.add(dwg.g(transform="translate(%i,%i)" % (padding,padding)))
+title = g.add(dwg.g())
+
+for i in range(ncols):
+    if i==0:
+        title.add(dwg.text(cols.columns[i], insert=(collocs[i],0), text_anchor='end', font_size='%ipx' % titlefont))
+    elif i==ncols-1:
+        title.add(dwg.text(cols.columns[i], insert=(collocs[i],0), font_size='%ipx' % titlefont))
+
+g = g.add(dwg.g())
 # loop over and add labels
 vmin = min(cols.values)
 vmax = max(cols.values)
@@ -58,7 +69,7 @@ def vertplace(j, col):
 
         diff = abs(curry-prevy)
         if diff < fontsize:
-            return prevy - 12;
+            return prevy - fontsize
         else:
             return curry
     else:
@@ -76,7 +87,7 @@ for i in range(ncols):
         val = col.iloc[j]
         y = vertplace(j, col)
         if i==0:
-            txt = g.add(dwg.text(collabels.iloc[j]+tabpad+str(val), insert=(collocs[i], h - y), text_anchor="end"))
+            txt = g.add(dwg.text(collabels.iloc[j]+tabpad+str(val), insert=(collocs[i], h - y), text_anchor='end'))
         elif i==ncols-1:
             txt = g.add(dwg.text(str(val)+tabpad+collabels.iloc[j], insert=(collocs[i], h - y)))
         else:
