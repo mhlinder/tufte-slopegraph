@@ -67,6 +67,6 @@ for i in range(ncols):
             # txt = g.add(dwg.text(str(val), insert=(collocs[i], h - y)))
 
         if i > 0:
-            line = g.add(dwg.line( (collocs[i-1]+textpad, h - scale(cols.iloc[sort,i-1][j])), (collocs[i]-textpad, h - y), stroke_width=1, stroke='black'))
+            line = g.add(dwg.line( (collocs[i-1]+textpad, h - scale(cols.iloc[sort,i-1][j])), (collocs[i]-textpad, h - y), stroke_width=1))
     
 dwg.save()
