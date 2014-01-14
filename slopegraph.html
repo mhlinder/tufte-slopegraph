@@ -46,15 +46,34 @@
             var texts = svg.selectAll("text")
                 .data(slopedata)
                 .enter();
+
+            var prev;
+            var vertplace = function(d, i, key) {
+                if (i > 0) {
+                    var prev = slopedata[i-1];
+                    prevy = vertplace(prev, i-1, key);
+                    var curry = scale(d[key]);
+
+                    var diff = Math.abs(curry - prevy);
+                    if (diff < pt) {
+                        return prevy - 12;
+                    } else {
+                        return curry;
+                    }
+                } else {
+                    return scale(d[key]);
+            }
+            };
             texts.append("text")
                 .attr("x", 200)
-                .attr("y", function(d, i) { return h - scale(d["1970"]); })
+                .attr("y", function(d, i) { return h - vertplace(d, i, "1970"); })
+                //.attr("y", function (d) { return h - scale(d["1970"]);})
                 .text(function (d) {return d.label + tabpad + d["1970"];})
                 .attr("xml:space", "preserve")
                 .attr("style", "text-anchor: end");
             texts.append("text")
                 .attr("x", 400)
-                .attr("y", function(d) {return h - scale(d["1979"]);})
+                .attr("y", function(d, i) {return h - vertplace(d, i, "1979");})
                 .text(function (d) {return d["1979"] + tabpad + d.label;})
                 .attr("xml:space", "preserve");
 
@@ -64,9 +83,9 @@
                 .enter()
             lines.append("line")
                 .attr("x1", 200 + space)
-                .attr("y1", function(d) {return h - scale(d["1970"]);})
+                .attr("y1", function(d, i) {return h - vertplace(d, i, "1970");})
                 .attr("x2", 400 - space)
-                .attr("y2", function(d) {return h - scale(d["1979"]);})
+                .attr("y2", function(d, i) {return h - vertplace(d, i, "1979");})
                 .attr("stroke-width", 1)
                 .attr("stroke", "black");
 
