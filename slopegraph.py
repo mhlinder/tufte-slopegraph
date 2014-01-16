@@ -73,84 +73,61 @@ def plot_slopegraph(data_dict, title, normalize=0):
         baseyr_ave = baseyr_data[~np.isnan(baseyr_data)].mean()
         data_mat = data_mat / baseyr_ave
 
-    # Add column average as final observation
+    # Add column average as final observation 
     for i, year in enumerate(years):
         data_mat[N, i] =  data_mat[~np.isnan(data_mat)[:, i], i].mean()
 
+    # Add col to hold ind var for average
+    data_mat = np.hstack((data_mat, np.zeros((N+1,1))))
+    data_mat[N, T] = 1
+
     # Get a new matrix to hold the location of the text values,
     #   which we will have to change given spacing/overlap considerations
+    data_mat.sort(axis=0)
     text_locs = np.copy(data_mat) 
 
 
     ## PLOTTING ##
 
-    # Generate figure 
-    fig, ax = plt.subplots(facecolor='white')
-    x_vals = range(2 + len(years))
-    x_labs = len(x_vals) * ['']
+    # General figure settings
+    fig, ax = plt.subplots(facecolor='white', figsize=(6,8),
+            dpi=80)
+
+    x_labs = [''] + years + ['']
+    for ind, lab in enumerate(x_labs): x_labs[ind] = '\n' + str(lab)
+    x_vals = range(len(x_labs))
+    
 
     # Plot each, looping first through obs, then through time
     for i, obs_name in enumerate(obs_names):
 
-        # Lists to hold the lines
-        x_plot = []
-        y_plot = []
-        
-        for j, year in enumerate(years):
-            x_loc = x_vals[j+1]
-            y_loc = data_mat[i, j]
+        # Color based on whether the indicator column is 1
+        if data_mat[i,T] == 1:
+            color = '-b'
+        else:
+            color = '-k'
 
-            x_plot.append(x_loc)
-            y_plot.append(y_loc)
 
-            # Add text labels if first or last time pd
-            if j+1 == 1:
-                label = obs_name + ' ' + str(round(y_loc, 2)) 
-                align = 'right'
-            elif j+1 == T:
-                label = ' ' + str(round(y_loc,2))+ ' ' + obs_name 
-                align = 'left'
-            ax.text(x_loc, y_loc, label, 
-                    horizontalalignment=align, 
+        # Plot observation
+        ax.plot(x_vals[1:-1], data_mat[i, 0:-1], color)
+
+
+        # Add text labels
+        aligns = ['right', 'left']
+        labels = [obs_name + ' ' + str(round(data_mat[i,1], 2)),
+                    str(round(data_mat[i,T-1],2)) + ' ' + obs_name]
+        for ind, t in enumerate([1, T]):
+            ax.text(x_vals[t], data_mat[i,t-1], labels[ind], 
+                    horizontalalignment=aligns[ind], 
                     verticalalignment='center')
 
-        # Plot
-        ax.plot(x_plot, y_plot, '-k')
-
-    # Plot the average more conspicuously
-    x_plot = []
-    y_plot = []
-    for j, year in enumerate(years):
-        x_loc = x_vals[j+1]
-        y_loc = data_mat[-1, j]
-
-        x_plot.append(x_loc)
-        y_plot.append(y_loc)
-
-        # Add text labels if first or last time pd
-        if j+1 == 1:  
-            label = 'Ave. ' + str(round(y_loc, 2)) + '  '
-            align='right'
-        elif j+1 == T:
-            label = '  ' + str(round(y_loc,2))+ ' Ave.' 
-            align='left'
-
-        ax.text(x_loc, y_loc, label, color='blue',
-                horizontalalignment=align, 
-                    verticalalignment='center')
-        x_labs[j+1] = '\n' + str(year) 
-
-
-
-    ax.plot(x_plot, y_plot, '-b', mfc='white')
-    
     ax.set_title(title)
     ax.set_xticks(x_vals)
     ax.set_xticklabels(x_labs, fontsize='16')
     ax.set_frame_on(False)
-    ax.tick_params(axis='y', which='both', left='off', right='off',
-            labelleft='off')
-    ax.tick_params(axis='x', which='both', top='off', bottom='off')
+    ax.tick_params(axis='both', which='both', left='off', right='off',
+            labelleft='off', bottom='off', top='off', pad=10)
+
     plt.show()
 
 
@@ -160,7 +137,7 @@ title = "Current Receipts of Government as a Percentage of Gross Domestic Produc
 data = json_csv(filename)
 
 # Plot
-plot_slopegraph(data, 'Country Comparison')
+a = plot_slopegraph(data, 'Country Comparison')
 
 
 
