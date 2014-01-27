@@ -13,6 +13,8 @@ slope graphs of input data, with a specified title.
 implements a two-column slopegraph, to be embedded in a document with
 a title, etc.
 
+![slopegraph](https://raw2.github.com/mhlinder/tufte-slopegraph/master/test.png)
+
 `slopegraph.py`
 ---------------
 User specifies two items in `slopegraph.py`: `filename` and `title`.
